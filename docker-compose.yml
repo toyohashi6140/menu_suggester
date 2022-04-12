@@ -11,3 +11,11 @@ services:
     command: sh -c "npm start"
     ports:
       - 3000:3000
+  go:
+    build:
+      context: .
+      dockerfile: ./docker/go/Dockerfile
+    container_name: go_container
+    tty: true
+    ports: 
+      - 3030:3030
