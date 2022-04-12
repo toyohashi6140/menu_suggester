@@ -4,7 +4,7 @@ services:
     build: 
       context: .
       dockerfile: ./docker/react/Dockerfile
-    container_name: react_container
+    container_name: menu_frontend
     tty: true
     volumes: 
       - ./app/frontend/menu-app-frontend:/app/frontend/menu-app-frontend
@@ -15,7 +15,16 @@ services:
     build:
       context: .
       dockerfile: ./docker/go/Dockerfile
-    container_name: go_container
+    container_name: menu_backend
     tty: true
     ports: 
       - 3030:3030
+  nginx:
+    image: nginx
+    container_name: menu_reverse_proxy
+    ports: 
+      - 80:80
+    environment: 
+      - TZ=Asia/Tokyo
+    volumes: 
+      - ./web/nginx.conf:/etc/nginx/nginx.conf
