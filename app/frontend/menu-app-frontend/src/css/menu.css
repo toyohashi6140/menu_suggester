@@ -1,0 +1,21 @@
+.btn{
+  display: block;
+  padding: 10px;
+  border-radius: 20px;
+  color: #fff;
+  background-color: darksalmon;
+  border: 1px solid;
+  margin: auto;
+}
+.dish {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .menu {
+    display: flex;
+  } 
+  .dish {
+    width: 33%;
+  }
+}
