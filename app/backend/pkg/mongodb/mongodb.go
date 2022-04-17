@@ -8,17 +8,23 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/auth"
 )
 
 type mongodb struct {
-	user, password, host, db, collection string
+	credential           options.Credential
+	host, db, collection string
 }
 
 func New(user, password, host string) *mongodb {
 	return &mongodb{
-		user:     user,
-		password: password,
-		host:     host,
+		credential: options.Credential{
+			AuthMechanism: auth.SCRAMSHA256,
+			Username:      user,
+			Password:      password,
+		},
+		host: host,
 	}
 }
 
@@ -42,13 +48,16 @@ func (m *mongodb) Connect() (*mongo.Collection, error) {
 	if m.collection == "" {
 		return nil, errors.New("no collection selected")
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(
 		ctx,
-		options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s@%s:27017", m.user, m.password, m.host)),
+		options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:27017", m.host)).SetAuth(m.credential),
 	)
 	if err != nil {
+		return nil, err
+	}
+	if err := client.Ping(ctx, readpref.Primary()); err != nil {
 		return nil, err
 	}
 	collection := client.Database(m.db).Collection(m.collection)
