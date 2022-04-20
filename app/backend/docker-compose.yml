@@ -1,0 +1,19 @@
+version: '3'
+services:
+  go:
+    build:
+      context: .
+      dockerfile: ../../docker/go/Dockerfile
+    container_name: menu_backend
+    tty: true
+    ports: 
+      - 3030:3030
+    environment:
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
+    networks: 
+      - menu_backend_net
+networks:
+  menu_backend_net:
+    external: true
+
+

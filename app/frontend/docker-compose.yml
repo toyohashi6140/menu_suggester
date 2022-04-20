@@ -1,0 +1,18 @@
+version: '3'
+services:
+  react: 
+    build: 
+      context: .
+      dockerfile: ../../docker/react/Dockerfile
+    container_name: menu_frontend
+    tty: true
+    volumes: 
+      - ./menu-app-frontend:/app/frontend/menu-app-frontend
+    command: sh -c "npm start"
+    ports:
+      - 3000:3000
+    networks: 
+      - menu_frontend_net
+networks:
+  menu_frontend_net:
+    external: true
