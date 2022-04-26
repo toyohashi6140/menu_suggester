@@ -1,0 +1,15 @@
+{
+    "sampleDish": {
+        "recipe_id": 1,
+        "calory": 500,
+        "ingredients": [
+            {"ingredient": "meat", "amount": 500, "unit": "g"},
+            {"ingredient": "tomato", "amount": 3, "unit": "個"}
+        ],
+        "recipe": [
+            {"step": 1, "content": "トマトをゆでる"},
+            {"step": 2, "content": "肉を炒める"},
+            {"step": 3, "content": "ゆでたトマトを加え混ぜながら炒める"}
+        ] 
+    }
+}

@@ -9,6 +9,7 @@ services:
     ports: 
       - 3030:3030
     environment:
+      MONGODB_USER: ${MONGODB_USER}
       MONGODB_PASSWORD: ${MONGODB_PASSWORD}
     networks: 
       - menu_backend_net

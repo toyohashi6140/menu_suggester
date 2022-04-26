@@ -1,29 +1,22 @@
 package main
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
+	"github.com/toyohashi6140/menu_suggester/pkg/handler"
 	"github.com/toyohashi6140/menu_suggester/pkg/mongodb"
 )
 
 func main() {
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		rw.Header().Set("Content-Type", "application/json")
-		mongodb := mongodb.New(os.Getenv("MONGODB_USER"), os.Getenv("MONGODB_PASSWORD"), "mongo").SetDB("menu").SetCollection("maindish")
-		collection, err := mongodb.Connect()
-		if err != nil {
-			res, _ := json.Marshal(map[string]interface{}{"error": err.Error()})
-			rw.Write(res)
-			return
-		}
-		res, err := json.Marshal(map[string]interface{}{"mongo": collection})
-		if err != nil {
-			panic("json error")
-		}
-
-		rw.Write(res)
-	})
+	client, err := mongodb.NewClient(os.Getenv("MONGODB_USER"), os.Getenv("MONGODB_PASSWORD"), "mongo").Connect()
+	if err != nil {
+		fmt.Println()
+		return
+	}
+	database := mongodb.NewDatabase(client, "menu").SetDB()
+	http.HandleFunc("/", handler.Root(database))
+	http.HandleFunc("/insert-main-dish", handler.InsertMainDish(database))
 	http.ListenAndServe(":3030", nil)
 }
